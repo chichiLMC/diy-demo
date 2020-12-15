@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>定制 -  demo</title>
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <script src="./js/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+    <div class="page">
+        <div class="page-diy">
+            <div class="header"></div>
+            <div class="container">
+                <div class="diy-bg" id="diyBox">
+                    <img class="bg" src="./img/003.png">
+                    <img class="camera" src="./img/002.png" />
+                </div>
+            </div>
+            <div class="footer">
+                <button onclick="addMatter()">添加图案</button>
+                <button onclick="saveImg()">生成图片</button>
+            </div>
+        </div>
+    </div>
+    <script src="./js/touch.min.js"></script>
+    <script src="./js/cat.touchjs.js"></script>
+    <script src="./js/html2canvas.min.js"></script>
+    <script>
+        var $targetObj; //当前元素
+        var scaleVal = 1; //缩放值
+        var rotateVal = 0; //旋转值
+        function initTouch(el) {
+            $targetObj = $(el);
+            //初始化设置
+            cat.touchjs.init($targetObj, function (left, top, scale, rotate) {
+                $targetObj.css({
+                    left: left,
+                    top: top,
+                    'transform': 'scale(' + scale + ') rotate(' + rotate + 'deg)',
+                    '-webkit-transform': 'scale(' + scale + ') rotate(' + rotate + 'deg)'
+                });
+            });
+            //初始化拖动手势
+            cat.touchjs.drag($targetObj, function (left, top) {
+                
+            });
+            //初始化缩放手势
+            cat.touchjs.scale($targetObj, function (scale) {
+                $targetObj.attr('data-scale',scale);
+            });
+            //初始化旋转手势
+            cat.touchjs.rotate($targetObj, function (rotate) {
+                $targetObj.attr('data-rotate',rotate);
+            });
+        };
+
+        function addMatter(){
+            $('#diyBox').append('<img class="matter" id="matter" src="./img/matter.png" />');
+            initTouch('#matter')
+        }
+        function saveImg(){
+            html2canvas(document.querySelector("#diyBox")).then(canvas => {
+                //document.body.appendChild(canvas);
+                var image = new Image();
+                image.src = canvas.toDataURL("image/png");
+                //生成base64图片，可传到后台
+                console.log(image.src)
+            });
+        }
+    </script>
+</body>
+</html>
